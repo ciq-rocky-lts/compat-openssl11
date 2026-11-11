@@ -22,7 +22,7 @@
 Summary: Utilities from the general purpose cryptography library with TLS implementation
 Name: compat-openssl11
 Version: 1.1.1k
-Release: 5.1%{?dist}.1
+Release: 5.2%{?dist}.1
 Epoch: 1
 # We have to remove certain patented algorithms from the openssl source
 # tarball with the hobble-openssl script which is included below.
@@ -91,6 +91,8 @@ Patch79: openssl-1.1.1-cve-2026-63072.patch
 Patch80: openssl-1.1.1-cve-2026-84782.patch
 # Follow-up to the CVE-2026-28390 fix: accept an explicit empty OAEP label (CIQ)
 Patch81: openssl-1.1.1-cve-2026-28390-empty-label.patch
+# Fix for CVE-2026-54874 (backport of openssl-3.0 1ca5a124b48f; CIQ)
+Patch82: openssl-1.1.1-cve-2026-54874.patch
 
 License: OpenSSL and ASL 2.0
 URL: http://www.openssl.org/
@@ -169,6 +171,7 @@ cp %{SOURCE13} test/
 %patch79 -p1 -b .cve-2026-63072
 %patch80 -p1 -b .cve-2026-84782
 %patch81 -p1 -b .cve-2026-28390-empty-label
+%patch82 -p1 -b .cve-2026-54874
 
 cp apps/openssl.cnf apps/openssl11.cnf
 
@@ -337,6 +340,9 @@ install -m 644 apps/openssl11.cnf $RPM_BUILD_ROOT%{_sysconfdir}/pki/tls/openssl1
 %ldconfig_scriptlets
 
 %changelog
+* Tue Nov 10 2026 Jeff Uphoff <juphoff@ciq.com> - 1:1.1.1k-5.2.1
+- Fix CVE-2026-54874 Avoid full read buffer allocation when buffering DTLS records
+
 * Tue Nov 10 2026 Jeff Uphoff <juphoff@ciq.com> - 1:1.1.1k-5.1.1
 - Fix CVE-2025-69419 Out-of-bounds write in PKCS#12 processing
 - Fix CVE-2026-28390 NULL pointer dereference in CMS EnvelopedData processing
